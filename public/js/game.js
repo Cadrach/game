@@ -1,43 +1,175 @@
+var wallSide = function(worldTransform){
+    var displayCenterX = 1*game.canvas.width / 3;
+    var displayCenterY = 2 * game.canvas.height / 3;
+
+    // angle of the x axis. Should be in [0, PI/2]
+    var angleX = Math.PI / 6;
+    // angle of the y axis. Should be in [PI/2, PI[
+    var angleY = Math.PI / 2;
+
+    // scale for the tiles
+    var scale = 2.0;
+    // relative scale for the x of the tile. use it to stretch tiles.
+    var relScaleX = 1;
+
+    // ----------------------------------------
+    //     Transforms
+    // ----------------------------------------
+    var transfMatrix = [Math.cos(angleX), Math.sin(angleX),
+        Math.cos(angleY), Math.sin(angleY)];
+    var _norm = relScaleX + 1;
+    relScaleX /= _norm;
+    transfMatrix[0] *= scale * relScaleX;
+    transfMatrix[1] *= scale  * relScaleX;
+    transfMatrix[2] *= scale / _norm;
+    transfMatrix[3] *= scale / _norm;
+    // matrix reverse
+    var determinant = transfMatrix[0] * transfMatrix[3] - transfMatrix[2] * transfMatrix[1];
+    var transfMatrixRev = [transfMatrix[3], -transfMatrix[1], -transfMatrix[2], transfMatrix[0]];
+    transfMatrixRev[0] /= determinant;
+    transfMatrixRev[1] /= determinant;
+    transfMatrixRev[2] /= determinant;
+    transfMatrixRev[3] /= determinant;
+
+    worldTransform.a = transfMatrix[0];
+    worldTransform.b = transfMatrix[1];
+    worldTransform.c = transfMatrix[2];
+    worldTransform.d = transfMatrix[3];
+    worldTransform.tx = displayCenterX - 70;
+    worldTransform.ty = displayCenterY - 40;
+}
+
+var wallFront = function(worldTransform){
+    var displayCenterX = 1*game.canvas.width / 3;
+    var displayCenterY = 2 * game.canvas.height / 3;
+
+    // angle of the x axis. Should be in [0, PI/2]
+    var angleX = -Math.PI / 6;
+    // angle of the y axis. Should be in [PI/2, PI[
+    var angleY = Math.PI / 2;
+
+    // scale for the tiles
+    var scale = 2.0;
+    // relative scale for the x of the tile. use it to stretch tiles.
+    var relScaleX = 1;
+
+    // ----------------------------------------
+    //     Transforms
+    // ----------------------------------------
+    var transfMatrix = [Math.cos(angleX), Math.sin(angleX),
+        Math.cos(angleY), Math.sin(angleY)];
+    var _norm = relScaleX + 1;
+    relScaleX /= _norm;
+    transfMatrix[0] *= scale * relScaleX;
+    transfMatrix[1] *= scale  * relScaleX;
+    transfMatrix[2] *= scale / _norm;
+    transfMatrix[3] *= scale / _norm;
+    // matrix reverse
+    var determinant = transfMatrix[0] * transfMatrix[3] - transfMatrix[2] * transfMatrix[1];
+    var transfMatrixRev = [transfMatrix[3], -transfMatrix[1], -transfMatrix[2], transfMatrix[0]];
+    transfMatrixRev[0] /= determinant;
+    transfMatrixRev[1] /= determinant;
+    transfMatrixRev[2] /= determinant;
+    transfMatrixRev[3] /= determinant;
+
+    worldTransform.a = transfMatrix[0];
+    worldTransform.b = transfMatrix[1];
+    worldTransform.c = transfMatrix[2];
+    worldTransform.d = transfMatrix[3];
+    worldTransform.tx = displayCenterX - 70;
+    worldTransform.ty = displayCenterY - 40;
+}
+
+var ground = function(worldTransform){
+    var displayCenterX = 1*game.canvas.width / 3;
+    var displayCenterY = 2 * game.canvas.height / 3;
+
+    // angle of the x axis. Should be in [0, PI/2]
+    var angleX = Math.PI / 6;
+    // angle of the y axis. Should be in [PI/2, PI[
+    var angleY = Math.PI / 1.2;
+
+    // scale for the tiles
+    var scale = 2.0;
+    // relative scale for the x of the tile. use it to stretch tiles.
+    var relScaleX = 1;
+
+    // ----------------------------------------
+    //     Transforms
+    // ----------------------------------------
+    var transfMatrix = [Math.cos(angleX), Math.sin(angleX),
+        Math.cos(angleY), Math.sin(angleY)];
+    var _norm = relScaleX + 1;
+    relScaleX /= _norm;
+    transfMatrix[0] *= scale * relScaleX;
+    transfMatrix[1] *= scale  * relScaleX;
+    transfMatrix[2] *= scale / _norm;
+    transfMatrix[3] *= scale / _norm;
+    // matrix reverse
+    var determinant = transfMatrix[0] * transfMatrix[3] - transfMatrix[2] * transfMatrix[1];
+    var transfMatrixRev = [transfMatrix[3], -transfMatrix[1], -transfMatrix[2], transfMatrix[0]];
+    transfMatrixRev[0] /= determinant;
+    transfMatrixRev[1] /= determinant;
+    transfMatrixRev[2] /= determinant;
+    transfMatrixRev[3] /= determinant;
+
+    worldTransform.a = transfMatrix[0];
+    worldTransform.b = transfMatrix[1];
+    worldTransform.c = transfMatrix[2];
+    worldTransform.d = transfMatrix[3];
+    worldTransform.tx = displayCenterX;
+    worldTransform.ty = displayCenterY;
+//    console.log(displayCenterX, displayCenterY)
+}
+
 var manager = {
     preload: function(){
         game.load.image('pic', 'assets/textures/walls/bathroom.png');
+        game.load.image('80x80', 'assets/textures/walls/bathroom80x80.png');
+        game.load.image('80x160', 'assets/textures/walls/bathroom80x160.png');
+        game.load.image('explosion', 'assets/masks/explosion.png');
     },
 
     create: function(){
-//        var wall = game.make.bitmapData(40, 40, 'pic');
-//        var wall = game.add.image(400, 300, 'pic');
+        //  Parameters
+        //
+//console.log(game)
+        // center of the display on screen
+
+        /***
+         * - PI/6    PI/2 pour un mur de face
+         * PI/6     PI/2 pour un mur de côté
+         * PI/6     P/1.2 pour un sol
+         */
+
+
+
+//
+//        var wall = game.add.image(400, 300, '80x80');
 //        wall.anchor.set(0.5,0.5);
-//        wall.rotation = Math.PI / 4;
-//        wall.height = 142;
-//        wall.width = 82;
-//        var texture = new Phaser.RenderTexture(game, 'pic');
-//        var texture = game.add.renderTexture('wall');
-//
-//
-//        game.add.sprite(100, 100, texture);
+//        wall.scale.set(40,40)
+//        wall.mask = game.make.image('explosion');
 
-        //	Here we'll create a renderTexture the same size as our game
-        texture = game.add.renderTexture(800, 600, 'mousetrail');
+        var bmd = game.make.bitmapData(80,80);
+        bmd.alphaMask('80x80', 'explosion');
 
-        //	This is the sprite that will be drawn to the texture
-        //	Note that we 'make' it, not 'add' it, as we don't want it on the display list.
-        ball = game.make.sprite(0, 0, 'pic');
-        ball.anchor.set(0.5);
+        var wall3 = game.add.image(400, 300, bmd);
+        var wall1 = game.add.image(400, 300, bmd);
+        var wall2 = game.add.image(400, 300, bmd);
 
-        //	This is the sprite that is drawn to the display. We've given it the renderTexture as its texture.
-        game.add.sprite(0, 0, texture);
+        // use with :
+        wall1.transformCallback = wallFront;
+        wall2.transformCallback = wallSide;
+        wall3.transformCallback = ground;
+
+        //Darken some walls
+        wall1.tint = 0xBBBBBB;
+        wall3.tint = 0xDDDDDD;
     },
 
     update: function() {
 
-    if (!game.input.activePointer.position.isZero())
-    {
-        //	This time we'll draw the ball sprite twice, in a mirror effect
-        texture.renderXY(ball, game.input.activePointer.x, game.input.activePointer.y, true);
-        texture.renderXY(ball, game.input.activePointer.x, 600 - game.input.activePointer.y, false);
     }
-
-}
 }
 
 var game = new Phaser.Game('100', '100', Phaser.AUTO, '', manager, true);
