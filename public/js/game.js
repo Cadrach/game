@@ -24,18 +24,25 @@ var manager = {
         var bmd = game.make.bitmapData(80,80);
         bmd.alphaMask('80x80', 'explosion');
 
-        var wall3 = game.add.image(100, 100, bmd);
+        var ground = game.add.image(100, 100, bmd);
+        var wall4 = game.add.image(170, 60, bmd);
         var wall1 = game.add.image(100, 100, bmd);
         var wall2 = game.add.image(100, 100, bmd);
+        var wall3 = game.add.image(170, 140, bmd);
+        var ceiling = game.add.image(100, 20, bmd);
 
         // use with :
         wall1.transformCallback = transform.wallFront;
         wall2.transformCallback = transform.wallSide;
-        wall3.transformCallback = transform.ground;
+        wall3.transformCallback = transform.wallFront;
+        wall4.transformCallback = transform.wallSide;
+        ground.transformCallback = transform.ground;
+        ceiling.transformCallback = transform.ground;
 
         //Darken some walls
         wall1.tint = 0xBBBBBB;
-        wall3.tint = 0xDDDDDD;
+        wall3.tint = 0xBBBBBB;
+        ground.tint = 0xDDDDDD;
     },
 
     update: function() {
