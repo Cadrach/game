@@ -41,8 +41,9 @@ var manager = {
 
         //Darken some walls
         wall1.tint = 0xBBBBBB;
-        wall3.tint = 0xBBBBBB;
-        ground.tint = 0xDDDDDD;
+        wall3.tint = wall1.tint;
+        wall2.tint = 0xECECEC;
+        wall4.tint = wall2.tint;
     },
 
     update: function() {
