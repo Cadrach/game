@@ -1,54 +1,86 @@
-var wallSide = function(worldTransform){
-    var displayCenterX = 1*game.canvas.width / 3;
-    var displayCenterY = 2 * game.canvas.height / 3;
+var game = new Phaser.Game(800, 400, Phaser.AUTO, 'test', null, true, false);
 
-    // angle of the x axis. Should be in [0, PI/2]
-    var angleX = Math.PI / 6;
-    // angle of the y axis. Should be in [PI/2, PI[
-    var angleY = Math.PI / 2;
+var BasicGame = function (game) { };
 
-}
+BasicGame.Boot = function (game) { };
 
-var transform;
+var isoGroup, cursorPos, cursor;
 
-var manager = {
-    preload: function(){
-        transform = new Transform(game);
-        game.load.image('pic', 'assets/textures/walls/bathroom.png');
-        game.load.image('80x80', 'assets/textures/walls/bathroom80x80.png');
-        game.load.image('80x160', 'assets/textures/walls/bathroom80x160.png');
-        game.load.image('explosion', 'assets/masks/explosion.png');
+BasicGame.Boot.prototype =
+{
+    preload: function () {
+//        game.load.image('tile', '../assets/tile.png');
+        game.load.image('tile', 'assets/textures/walls/bathroom80x80.png');
+
+        game.time.advancedTiming = true;
+
+        // Add and enable the plug-in.
+        game.plugins.add(new Phaser.Plugin.Isometric(game));
+
+        // This is used to set a game canvas-based offset for the 0, 0, 0 isometric coordinate - by default
+        // this point would be at screen coordinates 0, 0 (top left) which is usually undesirable.
+        game.iso.anchor.setTo(0.5, 0.2);
+
+
     },
+    create: function () {
 
-    create: function(){
-        var bmd = game.make.bitmapData(80,80);
-        bmd.alphaMask('80x80', 'explosion');
+        // Create a group for our tiles.
+        isoGroup = game.add.group();
 
-        var ground = game.add.image(100, 100, bmd);
-        var wall4 = game.add.image(170, 60, bmd);
-        var wall1 = game.add.image(100, 100, bmd);
-        var wall2 = game.add.image(100, 100, bmd);
-        var wall3 = game.add.image(170, 140, bmd);
-        var ceiling = game.add.image(100, 20, bmd);
+        this.transform = new Transform(game);
 
-        // use with :
-        wall1.transformCallback = transform.wallFront;
-        wall2.transformCallback = transform.wallSide;
-        wall3.transformCallback = transform.wallFront;
-        wall4.transformCallback = transform.wallSide;
-        ground.transformCallback = transform.ground;
-        ceiling.transformCallback = transform.ground;
+        // Let's make a load of tiles on a grid.
+        this.spawnTiles();
 
-        //Darken some walls
-        wall1.tint = 0xBBBBBB;
-        wall3.tint = wall1.tint;
-        wall2.tint = 0xECECEC;
-        wall4.tint = wall2.tint;
+        // Provide a 3D position for the cursor
+        cursorPos = new Phaser.Plugin.Isometric.Point3();
     },
+    update: function () {
+        // Update the cursor position.
+        // It's important to understand that screen-to-isometric projection means you have to specify a z position manually, as this cannot be easily
+        // determined from the 2D pointer position without extra trickery. By default, the z position is 0 if not set.
+        game.iso.unproject(game.input.activePointer.position, cursorPos);
 
-    update: function() {
-
+        // Loop through all tiles and test to see if the 3D position from above intersects with the automatically generated IsoSprite tile bounds.
+        isoGroup.forEach(function (tile) {
+            var inBounds = tile.isoBounds.containsXY(cursorPos.x, cursorPos.y);
+            // If it does, do a little animation and tint change.
+            if (!tile.selected && inBounds) {
+                tile.selected = true;
+                tile.tint = 0x86bfda;
+                game.add.tween(tile).to({ isoZ: 4 }, 200, Phaser.Easing.Quadratic.InOut, true);
+            }
+            // If not, revert back to how it was.
+            else if (tile.selected && !inBounds) {
+                tile.selected = false;
+                tile.tint = 0xffffff;
+                game.add.tween(tile).to({ isoZ: 0 }, 200, Phaser.Easing.Quadratic.InOut, true);
+            }
+        });
+    },
+    render: function () {
+        game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
+        game.debug.text(game.time.fps || '--', 2, 14, "#a7aebe");
+    },
+    spawnTiles: function () {
+        var tile;
+        var size = 80;
+        for (var xx = 0; xx < size*4; xx += size) {
+            for (var yy = 0; yy < size*4; yy += size) {
+                // Create a tile using the new game.add.isoSprite factory method at the specified position.
+                // The last parameter is the group you want to add it to (just like game.add.sprite)
+                var bmd = game.make.image(80,80,'tile');
+                bmd.transformCallback = this.transform.ground;
+                bmd.tint = (Math.random()*0xFFFFFF<<0);
+                tile = game.add.isoSprite(xx, yy, 0, bmd.generateTexture(), 0, isoGroup);
+                console.log(tile.width, tile.height);
+                tile.transformCallback = this.transform.ground;
+                tile.anchor.set(0.5, 0);
+            }
+        }
     }
-}
+};
 
-var game = new Phaser.Game('100', '100', Phaser.AUTO, '', manager, true);
+game.state.add('Boot', BasicGame.Boot);
+game.state.start('Boot');
