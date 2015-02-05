@@ -8,3 +8,5 @@ composer.lock
 Thumbs.db
 public/bower/
 .idea/
+public/build/
+node_modules/
