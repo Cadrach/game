@@ -11,6 +11,7 @@ BasicGame.Boot.prototype =
     preload: function () {
 //        game.load.image('tile', '../assets/tile.png');
         game.load.image('tile', 'assets/textures/walls/bathroom80x80.png');
+        game.load.image('tile2', 'assets/textures/walls/tile.png');
 
         game.time.advancedTiming = true;
 
@@ -64,18 +65,27 @@ BasicGame.Boot.prototype =
         game.debug.text(game.time.fps || '--', 2, 14, "#a7aebe");
     },
     spawnTiles: function () {
+
+//        var img = game.add.image(80,80,'tile');
+//        img.transformCallback = this.transform.ground;
+//        img.tint = (Math.random()*0xFFFFFF<<0);
+//
+//        var bmd = game.make.bitmapData(80,80);
+//        bmd.draw(img,0,0);
+//        bmd.update();
+//
+////        game.add.image(100,100,bmd);
+//        game.add.image(0,0,img);
+
         var tile;
         var size = 80;
         for (var xx = 0; xx < size*4; xx += size) {
             for (var yy = 0; yy < size*4; yy += size) {
                 // Create a tile using the new game.add.isoSprite factory method at the specified position.
                 // The last parameter is the group you want to add it to (just like game.add.sprite)
-                var bmd = game.make.image(80,80,'tile');
-                bmd.transformCallback = this.transform.ground;
-                bmd.tint = (Math.random()*0xFFFFFF<<0);
-                tile = game.add.isoSprite(xx, yy, 0, bmd.generateTexture(), 0, isoGroup);
-                console.log(tile.width, tile.height);
+                tile = game.add.isoSprite(xx, yy, 0, 'tile', 0, isoGroup);
                 tile.transformCallback = this.transform.ground;
+                console.log(tile.width, tile.height);
                 tile.anchor.set(0.5, 0);
             }
         }
