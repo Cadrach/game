@@ -6,6 +6,8 @@
     <script language="JavaScript" src="bower/phaser/build/phaser.js"></script>
     <script language="JavaScript" src="bower/phaser-plugin-isometric/dist/phaser-plugin-isometric.js"></script>
 
+    <script language="JavaScript" src="bower/matrix/matrix-1.2.0.min.js"></script>
+
     <script language="JavaScript" src="js/transform.js"></script>
     <script language="JavaScript" src="js/game.js"></script>
 

@@ -14,7 +14,7 @@ var Transform = function(game){
         var _norm = relScaleX + 1;
         relScaleX /= _norm;
         transfMatrix[0] *= scale * relScaleX;
-        transfMatrix[1] *= scale  * relScaleX;
+        transfMatrix[1] *= scale * relScaleX;
         transfMatrix[2] *= scale / _norm;
         transfMatrix[3] *= scale / _norm;
         // matrix reverse
@@ -44,12 +44,24 @@ var Transform = function(game){
         matrixReceived.ty+= matrixToApply.ty;
     }
 
-    var _ground = func(0, 0, Math.PI / 6, Math.PI / 1.2);
-    var _wallFront = func(-70, -40, -Math.PI / 6, Math.PI / 2);
-    var _wallSide = func(-70, -40, Math.PI / 6, Math.PI / 2);
+    var _ground = func(0, 0, game.iso.projectionAngle, Math.PI / 1.2);
+    var _wallFront = func(-70, -40, -game.iso.projectionAngle, Math.PI / 2);
+    var _wallSide = func(-70, -40, game.iso.projectionAngle, Math.PI / 2);
 
     return {
         ground: function(matrix){
+//            var _ground = new Matrix;
+//            _ground = _ground.rotate(Math.PI/4, new Point(40,40));
+//            _ground = _ground.scale(1,60/80, new Point(40,40));
+//            <g transform="matrix(0.707 0.409 -0.707 0.409 100.51 -14.78)">
+//                var _ground = {
+//                    a: 0.707,
+//                    b: 0.409,
+//                    c: -0.707,
+//                    d: 0.409,
+//                    tx: 0,
+//                    ty: 0
+//                }
             _apply(matrix, _ground);
         },
 

@@ -16,13 +16,11 @@ BasicGame.Boot.prototype =
         game.time.advancedTiming = true;
 
         // Add and enable the plug-in.
-        game.plugins.add(new Phaser.Plugin.Isometric(game));
+        game.plugins.add(new Phaser.Plugin.Isometric(game, null, Phaser.Plugin.Isometric.CLASSIC));
 
         // This is used to set a game canvas-based offset for the 0, 0, 0 isometric coordinate - by default
         // this point would be at screen coordinates 0, 0 (top left) which is usually undesirable.
         game.iso.anchor.setTo(0.5, 0.2);
-
-
     },
     create: function () {
 
@@ -78,15 +76,17 @@ BasicGame.Boot.prototype =
 //        game.add.image(0,0,img);
 
         var tile;
-        var size = 80;
+        var size = 86;
         for (var xx = 0; xx < size*4; xx += size) {
             for (var yy = 0; yy < size*4; yy += size) {
                 // Create a tile using the new game.add.isoSprite factory method at the specified position.
                 // The last parameter is the group you want to add it to (just like game.add.sprite)
                 tile = game.add.isoSprite(xx, yy, 0, 'tile', 0, isoGroup);
+//                tile.width = 70;
+//                tile.height = 40;
                 tile.transformCallback = this.transform.ground;
                 console.log(tile.width, tile.height);
-                tile.anchor.set(0.5, 0);
+                //tile.anchor.set(0.5, 0);
             }
         }
     }
